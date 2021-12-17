@@ -17,10 +17,19 @@ from sklearn.linear_model import LinearRegression
 lin_reg = LinearRegression()
 lin_reg.fit(X, y)
 
+def plot_xy(px, py):
+    to_plot = sorted([(x, y) for x, y in zip(px, py)], key=lambda a: a[0][0])
+    x_plot = [i[0] for i in to_plot]
+    y_plot = [i[1] for i in to_plot]
+    return (x_plot, y_plot)
+
+
+
 # Visualizing the Linear Regression results
 def viz_linear():
     plt.scatter(X, y, color='red')
-    plt.plot(X, lin_reg.predict(X), color='blue')
+    x_plt, y_plt = plot_xy(X, lin_reg.predict(X))
+    plt.plot(x_plt, y_plt, color='blue')
     plt.title('Linear Regression')
     plt.xlabel('X')
     plt.ylabel('Y')
@@ -36,13 +45,17 @@ X_poly = poly_reg.fit_transform(X)
 pol_reg = LinearRegression()
 pol_reg.fit(X_poly, y)
 
+
+y_pred = pol_reg.predict(poly_reg.fit_transform(X))
+mse = np.mean((y - y_pred)**2)
+
 # Visualizing the Polymonial Regression results
 def viz_polymonial():
     plt.scatter(X, y, color='red')
-    to_plot = sorted([(x, y) for x, y in zip(X, pol_reg.predict(poly_reg.fit_transform(X)))], key=lambda a: a[0][0])
-    x_plot = [i[0] for i in to_plot]
-    y_plot = [i[1] for i in to_plot]
-    plt.plot(x_plot, y_plot, color='blue')
+    x_plt, y_plt = plot_xy(X, y_pred)
+    plt.plot(x_plt, y_plt, color='blue')
+    x_plt, y_plt = plot_xy(X, mse)
+    plt.plot(x_plt, y_plt, color='green')
     plt.title('Linear Regression')
     plt.xlabel('X')
     plt.ylabel('Y')
